@@ -1,12 +1,13 @@
 import PropTypes from 'prop-types';
+import s from '../ImageGalleryItem/imageGalleryItem.module.css';
 
 export default function GalleryItem({ image, onImageClick }) {
   return (
-    <li className="ImageGalleryItem">
+    <li className={s.ImageGalleryItem}>
       <img
         src={image.webformatURL}
         alt={image.tags}
-        className="ImageGalleryItem-image"
+        className={s.ImageGalleryItem_image}
         onClick={() => onImageClick(image.largeImageURL)}
       />
     </li>
