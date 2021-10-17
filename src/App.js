@@ -4,8 +4,9 @@ import LoadingIcons from 'react-loading-icons';
 import './App.css';
 import SearchBar from './components/SearchBar/Searchbar';
 import fetchImages from './components/services/pixabay';
-import GalleryItem from './components/ImageGalleryItem/ImageGalleryItem';
-// import ImageGallery from './components/ImageGallery/ImageGallery';
+// import GalleryItem from './components/ImageGalleryItem/ImageGalleryItem';
+import ImageGallery from './components/ImageGallery/ImageGallery';
+// import Button from './components/Button/Button';
 
 export default class App extends Component {
   state = {
@@ -18,24 +19,28 @@ export default class App extends Component {
   componentDidUpdate(pervProps, prevState) {
     if (prevState.query !== this.state.query) {
       this.setState({ loading: true });
-
-      fetchImages(this.state.query, this.state.page)
-        .then(data => {
-          this.setState(
-            { data },
-            // state => ({
-            // data: [...state.data, ...data],
-            // page: state.page + 1,
-            // })
-          );
-          if (this.state.page !== 1) {
-            this.scrollOnLoadButton();
-          }
-        })
-        .catch(error => this.setState({ error }))
-        .finally(() => this.setState({ loading: false }));
+      this.fetchApi();
     }
   }
+
+  fetchApi = () => {
+    fetchImages(this.state.query, this.state.page)
+      .then(data => {
+        this.setState(
+          { data },
+          // state => ({
+          //   data: [...state.data, ...data],
+          //   page: state.page + 1,
+          // }),
+        );
+        if (this.state.page !== 1) {
+          this.scrollOnLoadButton();
+        }
+      })
+      .catch(error => this.setState({ error }))
+      .finally(() => this.setState({ loading: false }));
+  };
+
   handleSearch = query => {
     this.setState({
       query,
@@ -66,13 +71,14 @@ export default class App extends Component {
   };
 
   render() {
+    // const showMore = this.state.date.length > 0 && this.state.data.length >= 12;
     return (
       <>
         <SearchBar searchProp={this.handleSearch} />
         <ToastContainer autoClose={3000} />
 
         <>
-          <ul className="ImageGallery">
+          {/* <ul className="ImageGallery">
             {this.state.data.map(el => {
               return (
                 <GalleryItem
@@ -82,14 +88,15 @@ export default class App extends Component {
                 />
               );
             })}
-          </ul>
+          </ul> */}
         </>
 
-        {/* <ImageGallery
+        <ImageGallery
           data={this.state.data}
           onImageClick={this.handleGalleryLargeItem}
-        /> */}
-        <LoadingIcons.Oval />
+        />
+        {this.state.loading && <LoadingIcons.Oval />}
+        {/* {showMore && <Button onClick={this.fetchApi} />} */}
       </>
     );
   }
